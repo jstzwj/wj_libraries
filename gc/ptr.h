@@ -16,9 +16,14 @@ typedef int32_t pointer;
 #define itop(X) reinterpret_cast<T *>(X)
 
 
+class GcGlobal;
+/// <summary>
+/// The base class of ptr.
+/// </summary>
 class RawPtr
 {
-public:
+	friend class GcGlobal;
+protected:
 	pointer p;
 	int size;
 	int *refnum;
@@ -47,21 +52,26 @@ public:
 			return false;
 	}
 };
+
+/// <summary>
+/// PtrList will store all of these nodes.
+/// </summary>
 class PtrNode
 {
 public:
 	PtrNode()
-		:ptr (nullptr),prev (nullptr) ,next (nullptr) ,deleteFlag (true) ,root (false)
+		:ptr (nullptr),deleteFlag (true) ,root (false)
 	{}
 	PtrNode(RawPtr * _ptr,PtrNode *_prev,PtrNode *_next,bool _deleteFlag,bool _root)
-		:ptr(_ptr),prev(_prev),next(_next),deleteFlag(_deleteFlag),root(_root)
+		:ptr(_ptr),deleteFlag(_deleteFlag),root(_root)
 	{}
 	RawPtr * ptr;
-	PtrNode *prev;
-	PtrNode *next;
 	bool deleteFlag;
 	bool root;
 };
+/// <summary>
+/// The global setting of the gc system.
+/// </summary>
 class GcGlobal
 {
 public:
@@ -72,6 +82,7 @@ public:
 	static void addPtr( RawPtr & ptr);
 
 	static void gc();
+	static void releaseAll();
 };
 
 
@@ -142,10 +153,15 @@ ptr<T>& ptr<T>::operator=(const ptr<T>& rhs)
 {
 	if (&rhs != this)
 	{
-		p = rhs.p;
-		size = sizeof(T);
-		refnum = rhs.refnum;
-		++*refnum;
+		if (p!=rhs.p)
+		{
+			release();
+			p = rhs.p;
+			size = sizeof(T);
+			
+			refnum = rhs.refnum;
+			++*refnum;
+		}
 		GcGlobal::addPtr(*this);
 	}
 	return *this;

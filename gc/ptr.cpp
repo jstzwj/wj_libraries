@@ -3,7 +3,7 @@
 
 std::list<PtrNode > GcGlobal::allptr;
 int GcGlobal::capacity = 0;
-int GcGlobal::capacityLimit = 10000;
+int GcGlobal::capacityLimit = 10;
 
 
 void GcGlobal::addPtr(RawPtr & ptr)
@@ -65,6 +65,17 @@ void GcGlobal::gc()
 		if (i->deleteFlag==true)
 		{
 			delete reinterpret_cast<int *>(i->ptr->p);
+			allptr.erase(i++);
+			continue;
 		}
+	}
+}
+
+void GcGlobal::releaseAll()
+{
+	for (std::list<PtrNode>::iterator i = allptr.begin(); i != allptr.end();)
+	{
+			delete reinterpret_cast<int *>(i->ptr->p);
+			allptr.erase(i++);
 	}
 }
