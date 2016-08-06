@@ -4,6 +4,7 @@
 
 
 #include"types.h"
+
 namespace wl
 {
 	//Category of iterator
@@ -16,7 +17,7 @@ namespace wl
 	struct random_access_iterator_tag
 		: public bidirectional_iterator_tag { };
 	//Base class of iterator
-	template<class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
+	template<class Category, class T, class Distance = ptrdiff, class Pointer = T*, class Reference = T&>
 	struct iterator
 	{
 		typedef Category iterator_category;
@@ -26,7 +27,7 @@ namespace wl
 		typedef Reference reference;
 	};
 }
-
+#include"traits.h"
 
 #endif // !ITERATOR
 
