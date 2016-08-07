@@ -20,21 +20,21 @@ namespace wl
 	template<typename T>
 	struct iterator_traits<T*>
 	{
-		typedef typename random_access_iterator_tag iterator_category;
-		typedef typename T value_type;
-		typedef typename wsize difference_type;
-		typedef typename T* pointer;
-		typedef typename T& reference;
+        typedef random_access_iterator_tag iterator_category;
+        typedef T value_type;
+        typedef wsize difference_type;
+        typedef T* pointer;
+        typedef T& reference;
 	};
 
 	template<typename T>
 	struct iterator_traits<const T*>
 	{
-		typedef typename random_access_iterator_tag iterator_category;
-		typedef typename T value_type;
-		typedef typename wsize difference_type;
-		typedef typename T* pointer;
-		typedef typename T& reference;
+        typedef random_access_iterator_tag iterator_category;
+        typedef T value_type;
+        typedef wsize difference_type;
+        typedef T* pointer;
+        typedef T& reference;
 	};
 	//advance base
 	template<class InputIterator, class Distance>
@@ -199,7 +199,7 @@ namespace wl
 	template<>
 	struct type_traits<unsigned long>
 	{
-		typedef typename true_type   has_trivial_default_constructor;
+        typedef true_type   has_trivial_default_constructor;
 		typedef true_type   has_trivial_copy_constructor;
 		typedef true_type   has_trivial_assignment_operator;
 		typedef true_type   has_trivial_destructor;
