@@ -4,6 +4,7 @@
 #define VECTOR
 #include"Allocator.h"
 #include"iterator.h"
+#include"memory.h"
 
 namespace wl
 {
@@ -17,47 +18,46 @@ namespace wl
 	{
 	private:
 		const T * p;
-		
+		typedef ConstVectorIterator             iterator;
 	public:
-		typedef VectorIterator             iterator;
 		typedef random_access_iterator_tag iterator_category;     // µü´úÆ÷ÀàÐÍ
-	
+
 	public:
 		//constructor
-		iterator(pointer otherPtr) : p(otherPtr) {}
-		iterator() {}
-		iterator(const iterator& otherIterator) : p(otherIterator.p) {}
+		ConstVectorIterator(pointer otherPtr) : p(otherPtr) {}
+		ConstVectorIterator() {}
+		ConstVectorIterator(const iterator& otherIterator) : p(otherIterator.p) {}
 
 		// equal and inequal operator
-		bool operator==(const iterator& other) const { return p == other.p; }
-		bool operator!=(const iterator& other) const { return p != other.p; }
+		bool operator==(const ConstVectorIterator& other) const { return p == other.p; }
+		bool operator!=(const ConstVectorIterator& other) const { return p != other.p; }
 
 		//Pointer operator
 		reference operator*() const { return *p; }
 		pointer operator->() const { return &*p; }
 
 		//Move iterator
-		iterator& operator++() { return *(++p); }
-		iterator operator++(int) { return *(p++); }
-		iterator& operator--() { return *(--p); }
-		iterator operator--(int) { return *(p--); }
+		ConstVectorIterator& operator++() { return *(++p); }
+		ConstVectorIterator operator++(int) { return *(p++); }
+		ConstVectorIterator& operator--() { return *(--p); }
+		ConstVectorIterator operator--(int) { return *(p--); }
 
 		//Random move
-		iterator operator+(ptrdiff dis) { return p + dis; }
-		iterator operator-(ptrdiff dis) { return p - dis; }
-		iterator& operator+=(const iterator &other) { p += other; return p; }
-		iterator& operator-=(const iterator &other) { p -= other; return p; }
-		iterator& operator+=(different_type n) { p += n; return p; }
-		iterator& operator-=(different_type n) { p -= n; return p; }
+		ConstVectorIterator operator+(ptrdiff dis) const{ return p + dis; }
+		ConstVectorIterator operator-(ptrdiff dis) const{ return p - dis; }
+		ConstVectorIterator& operator+=(const ConstVectorIterator &other) { p += other; return p; }
+		ConstVectorIterator& operator-=(const ConstVectorIterator &other) { p -= other; return p; }
+		ConstVectorIterator& operator+=(difference_type n) { p += n; return p; }
+		ConstVectorIterator& operator-=(difference_type n) { p -= n; return p; }
 
 		//assignment
-		iterator & operator=(const iterator & other) { p = other.p; return *this; };
+		ConstVectorIterator & operator=(const ConstVectorIterator & other) { p = other.p; return *this; };
 
 		//compare
-		bool operator>(const iterator & other) { return p > other.p; }
-		bool operator<(const iterator & other) { return p < other.p; }
-		bool operator>=(const iterator & other) { return p >= other.p; }
-		bool operator<=(const iterator & other) { return p <= other.p; }
+		bool operator>(const ConstVectorIterator & other)const { return p > other.p; }
+		bool operator<(const ConstVectorIterator & other)const { return p < other.p; }
+		bool operator>=(const ConstVectorIterator & other)const { return p >= other.p; }
+		bool operator<=(const ConstVectorIterator & other)const { return p <= other.p; }
 		
 
 
@@ -70,6 +70,14 @@ namespace wl
 	{
 	private:
 		T * p;
+		typedef VectorIterator             iterator;
+	public:
+		//constructor
+		VectorIterator(pointer otherPtr) : p(otherPtr) {}
+		VectorIterator() {}
+		VectorIterator(const iterator& otherIterator) : p(otherIterator.p) {}
+
+
 	};
 
 
@@ -98,11 +106,23 @@ namespace wl
 		pointer finish;
 		pointer end_of_storage;
 
+		alloc allocator;
 	public:
 		VectorBase()
 			:start(NULL), finish(NULL), end_of_storage(NULL) {}
-		//VectorBase(const VectorBase & other);
-
+		VectorBase(const VectorBase & other)
+		{
+			start = allocator.allocate(other.size());
+			finish = uninitialized_copy(other.start, other.finish, start);
+			end_of_storage = finish;
+		}
+		VectorBase(long n, const T &value)
+		{
+			start = allocator.allocate(n);
+			uninitialized_fill_n(start,n,value);
+			finish = start + n;
+			end_of_storage = finish;
+		}
 
 	public:
 		iterator begin() { return start; }
@@ -110,11 +130,33 @@ namespace wl
 		const_iterator cbegin() { return start; }
 		const_iterator cend() { return finish; }
 
+		reference front() { return *start; }
+		reference back() { return *(finish-1); }
+
 		size_type size() { return finish - start; }
 		size_type capacity() { return end_of_storage - start; }
 
 		bool empty() { return start == finish; }
 		reference operator[] (size_type n) { return *(start + n); }
+
+		iterator erase(iterator n)
+		{
+			if (n<start||n>=finish)
+			{
+				throw "Erase error:Iterator is out of range.";
+			}
+			if (n+1!=end())
+			{
+				destroy(n);
+				copy(n+1,finish,n);
+			}
+			else
+			{
+				destroy(n);
+			}
+			--finish;
+			return n;
+		}
 
 	};
 
@@ -123,10 +165,10 @@ namespace wl
 
 
 	template<class T,class alloc=Allocator<T> >
-	class Vector:VectorBase<T,alloc>
+	class Vector:public VectorBase<T,alloc>
 	{
 	public:
-		typedef vector<T, alloc> MyType;
+		typedef Vector<T, alloc> MyType;
 		typedef alloc allocator_type;
 
 		typedef typename T value_type;

@@ -14,6 +14,7 @@ namespace wl
         :public iterator<random_access_iterator_tag, T>
 	{
 	public:
+        typedef ConstStringIterator MyType;
 		typedef random_access_iterator_tag iterator_category;     // µü´úÆ÷ÀàĞÍ
 
 
