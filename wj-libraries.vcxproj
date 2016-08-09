@@ -115,6 +115,7 @@
     <ClInclude Include="tl\iterator.h" />
     <ClInclude Include="tl\memory.h" />
     <ClInclude Include="tl\mpl.h" />
+    <ClInclude Include="tl\numeric.h" />
     <ClInclude Include="tl\String.h" />
     <ClInclude Include="tl\traits.h" />
     <ClInclude Include="tl\Vector.h" />

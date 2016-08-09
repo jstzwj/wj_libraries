@@ -17,4 +17,5 @@ HEADERS += \
     tl/mpl.h \
     tl/String.h \
     tl/traits.h \
-    tl/Vector.h
+    tl/Vector.h \
+    tl/numeric.h

@@ -45,6 +45,9 @@
     <ClInclude Include="tl\Vector.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="tl\numeric.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="源.cpp">
