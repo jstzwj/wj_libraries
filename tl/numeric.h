@@ -85,6 +85,51 @@ T inner_product(InputIterator1 first1, InputIterator1 last1, InputIterator2 firs
 		++first2;
 	}
 }
+//partial sum
+template<class InputIterator,class OutputIterator>
+OutputIterator partial_sum(InputIterator first,InputIterator last,OutputIterator result)
+{
+	if (first==last)
+	{
+		return result;
+	}
+	*result = *first;
+	//get the value of object,which is pointed by iterator.
+	iterator_traits<InputIterator>::value_type  value = *first;
+	++first;
+	while (first!=last)
+	{
+		value = value + *first;
+		++result;
+		*result = value;
+		++first;
+	}
+	return ++result;
+}
+template<class InputIterator, class OutputIterator,class BinaryOperation>
+OutputIterator partial_sum(InputIterator first, InputIterator last, OutputIterator result, BinaryOperation binary_op)
+{
+	if (first == last)
+	{
+		return result;
+	}
+	*result = *first;
+	//get the value of object,which is pointed by iterator.
+	iterator_traits<InputIterator>::value_type  value = *first;
+	++first;
+	while (first != last)
+	{
+		value = binary_op(value , *first);
+		++result;
+		*result = value;
+		++first;
+	}
+	return ++result;
+}
+//TODO
+//power
+
+//itoa
 
 
 

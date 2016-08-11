@@ -110,6 +110,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="algobase.h" />
     <ClInclude Include="tl\Allocator.h" />
     <ClInclude Include="tl\construct.h" />
     <ClInclude Include="tl\iterator.h" />
