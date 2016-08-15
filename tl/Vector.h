@@ -5,7 +5,7 @@
 #include"Allocator.h"
 #include"iterator.h"
 #include"memory.h"
-
+#include"algobase.h"
 namespace wl
 {
 
@@ -37,10 +37,20 @@ namespace wl
 		pointer operator->() const { return &*p; }
 
 		//Move iterator
-		ConstVectorIterator& operator++() { return *(++p); }
-		ConstVectorIterator operator++(int) { return *(p++); }
-		ConstVectorIterator& operator--() { return *(--p); }
-		ConstVectorIterator operator--(int) { return *(p--); }
+		ConstVectorIterator& operator++() { ++p; return *this; }
+		ConstVectorIterator operator++(int)
+		{
+			ConstVectorIterator tmp(*this);
+			p++;
+			return tmp;
+		}
+		ConstVectorIterator& operator--() { --p; return *this; }
+		ConstVectorIterator operator--(int)
+		{
+			ConstVectorIterator tmp(*this);
+			p--;
+			return tmp;
+		}
 
 		//Random move
 		ConstVectorIterator operator+(ptrdiff dis) const{ return p + dis; }
@@ -76,6 +86,45 @@ namespace wl
 		VectorIterator(pointer otherPtr) : p(otherPtr) {}
 		VectorIterator() {}
 		VectorIterator(const iterator& otherIterator) : p(otherIterator.p) {}
+		// equal and inequal operator
+		bool operator==(const VectorIterator& other) const { return p == other.p; }
+		bool operator!=(const VectorIterator& other) const { return p != other.p; }
+		//Pointer operator
+		reference operator*() const { return *p; }
+		pointer operator->() const { return &*p; }
+
+		//Move iterator
+		VectorIterator& operator++() { ++p; return *this; }
+		VectorIterator operator++(int) 
+		{ 
+			VectorIterator tmp(*this);
+			p++; 
+			return tmp; 
+		}
+		VectorIterator& operator--() { --p; return *this; }
+		VectorIterator operator--(int) 
+		{ 
+			VectorIterator tmp(*this);
+			p--; 
+			return tmp; 
+		}
+
+		//Random move
+		VectorIterator operator+(ptrdiff dis) const { return p + dis; }
+		VectorIterator operator-(ptrdiff dis) const { return p - dis; }
+		VectorIterator& operator+=(const VectorIterator &other) { p += other; return p; }
+		VectorIterator& operator-=(const VectorIterator &other) { p -= other; return p; }
+		VectorIterator& operator+=(difference_type n) { p += n; return p; }
+		VectorIterator& operator-=(difference_type n) { p -= n; return p; }
+
+		//assignment
+		VectorIterator & operator=(const VectorIterator & other) { p = other.p; return *this; };
+
+		//compare
+		bool operator>(const VectorIterator & other)const { return p > other.p; }
+		bool operator<(const VectorIterator & other)const { return p < other.p; }
+		bool operator>=(const VectorIterator & other)const { return p >= other.p; }
+		bool operator<=(const VectorIterator & other)const { return p <= other.p; }
 
 
 	};
@@ -106,7 +155,7 @@ namespace wl
 		pointer finish;
 		pointer end_of_storage;
 
-		alloc allocator;
+		//alloc allocator;
 	public:
 		VectorBase()
 			:start(NULL), finish(NULL), end_of_storage(NULL) {}
@@ -118,12 +167,16 @@ namespace wl
 		}
 		VectorBase(long n, const T &value)
 		{
-			start = allocator.allocate(n);
+			start = alloc::allocate(n);
 			uninitialized_fill_n(start,n,value);
 			finish = start + n;
 			end_of_storage = finish;
 		}
-
+		~VectorBase()
+		{
+			destroy(start,finish);
+			alloc::deallocate(start,end_of_storage-start);
+		}
 	public:
 		iterator begin() { return start; }
 		iterator end() { return finish; }
@@ -148,7 +201,7 @@ namespace wl
 			if (n+1!=end())
 			{
 				destroy(n);
-				copy(n+1,finish,n);
+				copy(n+1,iterator(finish),n);
 			}
 			else
 			{

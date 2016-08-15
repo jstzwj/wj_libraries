@@ -48,7 +48,10 @@
     <ClInclude Include="tl\numeric.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="algobase.h">
+    <ClInclude Include="tl\utility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tl\algobase.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

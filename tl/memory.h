@@ -16,19 +16,31 @@ namespace wl
 	template<class T>
 	void destroy(T *p)
 	{
-		p->~T();
+		//p->~T();
+		destroy_aux(p, type_traits<iterator_traits<Iterator>::value_type>::has_trivial_destructor());
 	}
 
 	template<class Iterator>
 	void destroy(Iterator p)
 	{
-		p->~T();
+		//p->~T();
+		destroy_aux(p,type_traits<iterator_traits<Iterator>::value_type>::has_trivial_destructor());
 	}
 
 	template<class ForwardIterator>
 	void destroy(ForwardIterator first, ForwardIterator last)
 	{
 		destroy_aux(first,last, type_traits<iterator_traits<ForwardIterator>::value_type >::has_trivial_destructor() );
+	}
+
+	template<class ForwardIterator>
+	void destroy_aux(ForwardIterator p, true_type) {}
+
+	template<class ForwardIterator>
+	void destroy_aux(ForwardIterator p, false_type) 
+	{
+		typedef typename iterator_traits<p>::value_type T;
+		p->~T();
 	}
 
 	template<class ForwardIterator>

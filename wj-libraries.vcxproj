@@ -110,7 +110,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="algobase.h" />
+    <ClInclude Include="tl\algobase.h" />
     <ClInclude Include="tl\Allocator.h" />
     <ClInclude Include="tl\construct.h" />
     <ClInclude Include="tl\iterator.h" />
@@ -119,6 +119,7 @@
     <ClInclude Include="tl\numeric.h" />
     <ClInclude Include="tl\String.h" />
     <ClInclude Include="tl\traits.h" />
+    <ClInclude Include="tl\utility.h" />
     <ClInclude Include="tl\Vector.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>

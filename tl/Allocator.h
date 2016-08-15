@@ -28,37 +28,37 @@ namespace wl
 			typedef Allocator<U> other;
 		};
 		//New a object
-		pointer allocate(size_type n, const_pointer = 0) 
+		static pointer allocate(size_type n, const_pointer = 0) 
 		{
 			T* p= static_cast<T *>(::operator new (n*sizeof(T)) );	//operator new
 			return static_cast<pointer>(p);
 		}
 		//Delete the object
-		void deallocate(pointer p, size_type) 
+		static void deallocate(pointer p, size_type)
 		{
 			::operator delete(p);
 		}
 		//Call construct function
-		void construct(pointer p, const value_type& x)
+		static void construct(pointer p, const value_type& x)
 		{
 			new(p) value_type(x);	//placement new
 		}
 		//Call deconstruct function
-		void destroy(pointer p)
+		static void destroy(pointer p)
 		{
 			p->~value_type(); 
 		}
 		//Get the address of object
-		pointer address(reference x)
+		static pointer address(reference x)
 		{
 			return static_cast<pointer>(&x);
 		}
-		pointer const_address(const_reference x)
+		static pointer const_address(const_reference x)
 		{
 			return static_cast<const_pointer>(&x);
 		}
 		//The largest number of this value type that computer can express.
-		size_type max_size() const 
+		static size_type max_size()
 		{
 			return static_cast<size_type>(-1) / sizeof(value_type);
 		}
