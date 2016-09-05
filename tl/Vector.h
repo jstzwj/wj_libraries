@@ -232,8 +232,13 @@ namespace wl
 		typedef typename T & reference;
 		typedef typename const T & const_reference;
 
-		typedef VectorIterator iterator;
+		typedef VectorIterator<T> iterator;
 
+
+		Vector():VectorBase{}
+		Vector(const Vector & other):VectorBase(other){}
+		Vector(long n, const T &value)
+		:VectorBase<T>(n,value){}
 	protected:
 
 
