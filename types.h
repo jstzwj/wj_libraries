@@ -42,7 +42,9 @@ namespace wl
 	#if ! defined x64
 	typedef wint32_t Pint;
 	#endif
-	typedef Pint ptrdiff;
+
+    using size_t=wl::wsize;
+    using ptrdiff=Pint;
 
 
 	//Decide use unicode char or ascii char

@@ -72,7 +72,7 @@ namespace wl
 	template<class ForwardIterator1, class ForwardIterator2>
 	inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b)
 	{
-		iter_swap_aux(a, b, iterator_traits<a>::pointer());
+                iter_swap_aux(a, b, iterator_traits<ForwardIterator1>::pointer());
 	}
 
 	//lexicographical_compare
@@ -159,7 +159,8 @@ namespace wl
 		return pair<InputIterator1, InputIterator2>(first1, first2);
 	}
 
-	//swap
+        //swap (move to utility)
+        /*
 	template<class T>
 	inline void swap(T&a, T&b)
 	{
@@ -168,20 +169,23 @@ namespace wl
 		a = b;
 		b = tmp;
 	}
-	//copy
+        */
+        //copy
+        template<class InputIterator, class OutputIterator>
+        struct copy_dispatch
+        {
+                OutputIterator operator() (InputIterator first, InputIterator last, OutputIterator result)
+                {
+                        return copy_aux(first, last, result,typename iterator_traits<InputIterator>::iterator_category());
+                }
+        };
+
 	template<class InputIterator, class OutputIterator>
 	inline OutputIterator copy(InputIterator first, InputIterator last, OutputIterator result)
 	{
 		return copy_dispatch<InputIterator,OutputIterator>()(first, last, result);
 	}
-	template<class InputIterator, class OutputIterator>
-	struct copy_dispatch
-	{
-		OutputIterator operator() (InputIterator first, InputIterator last, OutputIterator result)
-		{
-			return copy_aux(first, last, result, iterator_traits<InputIterator>::iterator_category());
-		}
-	};
+
 	template<class InputIterator, class OutputIterator>
 	inline OutputIterator copy_aux(InputIterator first, InputIterator last, OutputIterator result, input_iterator_tag)
 	{

@@ -18,4 +18,7 @@ HEADERS += \
     tl/String.h \
     tl/traits.h \
     tl/Vector.h \
-    tl/numeric.h
+    tl/numeric.h \
+    tl/type_traits.h \
+    tl/allocator_traits.h \
+    tl/utility.h

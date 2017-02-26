@@ -93,7 +93,7 @@ namespace wl
 	/// <summary>
 	/// A type representing a stringbase, which control the allocation of memory.
 	/// </summary>
-	template <class T,class allocator = Allocator<Char> >
+    template <class T,class allocator = wl::allocator<Char> >
 	class StringBase
 	{
 	public:
@@ -120,7 +120,7 @@ namespace wl
 	};
 	
 	//Define string we used
-	typedef StringBase<Char, Allocator<Char> > String;
+    typedef StringBase<Char, wl::allocator<Char> > String;
 
 	template<class T, class allocator>
 	StringBase<T, allocator>::StringBase()
